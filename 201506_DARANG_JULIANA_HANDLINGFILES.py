@@ -14,32 +14,37 @@ def get_property(code, property):
     return products[code][property]
 
 def main():
-    order = []
+    menu = []
     subtotal = []
 
     while True:
-        product_code = input("What is your order? ")
+        order = input("Order, Quantity: ")
 
-        if product_code != "/":
-            quantity_code = input("Quantity: ")
+        if order == "/":
+            break
 
-            order.append(product_code + "," + get_product(product_code)["name"] + "," + quantity_code + "," + str(get_property(product_code, "price") * int(quantity_code)))
+        elif "," not in order:
+            print("Invalid format.")
+            continue
+
+        elif order != "/":
+
+            product_code = order.split(",")[0]
+            quantity_code = order.split(",")[1]
+
+            menu.append(product_code + "," + get_product(product_code)["name"] + "," + quantity_code + "," + str(get_property(product_code, "price") * int(quantity_code)))
             subtotal.append(get_property(product_code, "price") * int(quantity_code))
 
             total = sum(subtotal)
-
             continue
 
-        elif product_code == "/":
-            break
-
     final = []
-    for i in order:
+    for i in menu:
         final.append(i.split(","))
         final.sort()
 
     with open("receipt.txt", "w") as receipt:
-        receipt.write('==\nCODE\t\t\t\t\t\t\tNAME\t\t\t\t\t\tQUANTITY\t\t\t\t\t\tSUBTOTAL')
+        receipt.write('==\nCODE\t\t\t\tNAME\t\t\tQUANTITY\t\t\tSUBTOTAL')
 
         for j in range(len(final)):
             code = final[j][0]
@@ -47,8 +52,8 @@ def main():
             quantity = final[j][2]
             subtotal = final[j][3]
 
-            receipt.write(f'\n{code}\t\t\t\t{name}\t\t\t\t\t{quantity}\t\t\t\t\t{subtotal}')
+            receipt.write(f'\n{code}\t\t\t{name}\t\t\t{quantity}\t\t\t{subtotal}')
 
-        receipt.write(f'\n\nTotal:\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t{total}\n== ')
+        receipt.write(f'\nTotal:\t\t\t\t\t\t\t\t\t\t\t\t{total}\n== ')
 
 main()
