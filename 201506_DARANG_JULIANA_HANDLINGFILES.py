@@ -15,6 +15,7 @@ def get_property(code, property):
 
 def main():
     menu = []
+    orders = {}
     subtotal = []
 
     while True:
@@ -28,29 +29,36 @@ def main():
             continue
 
         elif order != "/":
-
             product_code = order.split(",")[0]
             quantity_code = order.split(",")[1]
 
-            menu.append(product_code + "," + get_product(product_code)["name"] + "," + quantity_code + "," + str(get_property(product_code, "price") * int(quantity_code)))
-            subtotal.append(get_property(product_code, "price") * int(quantity_code))
+        if product_code in orders:
+            orders[product_code] += int(quantity_code)
+        else:
+            orders[product_code] = int(quantity_code)
 
-            total = sum(subtotal)
-            continue
+    for i in range(len(orders)):
+        total_product = list(orders.keys())[i]
+        quantity = list(orders.values())[i]
+
+        menu.append(total_product + "," + get_product(total_product)["name"] + "," + str(quantity) + "," + str(get_property(total_product, "price") * int(quantity)))
+        subtotal.append(get_property(total_product, "price") * int(quantity))
+
+        total = sum(subtotal)
 
     final = []
-    for i in menu:
-        final.append(i.split(","))
+    for j in menu:
+        final.append(j.split(","))
         final.sort()
 
     with open("receipt.txt", "w") as receipt:
-        receipt.write('==\nCODE\t\t\t\tNAME\t\t\tQUANTITY\t\t\tSUBTOTAL')
+        receipt.write('==\nCODE\t\t\t\tNAME\t\t\tQUANTITY\t\tSUBTOTAL')
 
-        for j in range(len(final)):
-            code = final[j][0]
-            name = final[j][1]
-            quantity = final[j][2]
-            subtotal = final[j][3]
+        for k in range(len(final)):
+            code = final[k][0]
+            name = final[k][1]
+            quantity = final[k][2]
+            subtotal = final[k][3]
 
             receipt.write(f'\n{code}\t\t\t{name}\t\t\t{quantity}\t\t\t{subtotal}')
 
