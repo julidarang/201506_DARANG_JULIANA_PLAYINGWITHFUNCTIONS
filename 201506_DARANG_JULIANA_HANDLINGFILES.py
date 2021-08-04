@@ -39,10 +39,10 @@ def main():
 
     for i in range(len(orders)):
         total_product = list(orders.keys())[i]
-        quantity = list(orders.values())[i]
+        total_quantity = list(orders.values())[i]
 
-        menu.append(total_product + "," + get_product(total_product)["name"] + "," + str(quantity) + "," + str(get_property(total_product, "price") * int(quantity)))
-        subtotal.append(get_property(total_product, "price") * int(quantity))
+        menu.append(total_product + "," + get_product(total_product)["name"] + "," + str(total_quantity) + "," + str(get_property(total_product, "price") * int(total_quantity)))
+        subtotal.append(get_property(total_product, "price") * int(total_quantity))
 
         total = sum(subtotal)
 
